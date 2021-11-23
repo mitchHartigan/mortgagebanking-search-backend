@@ -1,0 +1,7 @@
+org: modjeska
+app: mortgagebanking-search-backend
+component: express
+name: mortgagebanking-search-backend
+
+inputs:
+  src: ./

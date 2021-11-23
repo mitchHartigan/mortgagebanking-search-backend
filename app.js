@@ -33,32 +33,11 @@ const _loadCollection = async () => {
 app.get("/search", async (req, res) => {
   try {
     let collection = await _loadCollection();
+    let settings = await JSON.parse(req.query.settings);
 
-    let result = await collection
-      .aggregate([
-        {
-          $search: {
-            text: {
-              query: `${req.query.term}`,
-              path: "Acronym",
-            },
-          },
-        },
-        { $limit: 50 },
-        {
-          $project: {
-            _id: 1,
-            Acronym: 1,
-            Citation: 1,
-            "Description of use": 1,
-            "Date Entered": 1,
-            Text: 1,
-            Definition: 1,
-            score: { $meta: "searchScore" },
-          },
-        },
-      ])
-      .toArray();
+    // Make the query, based on the provided settings.
+    let result = await collection.aggregate([settings]).toArray();
+
     res.send(result);
   } catch (err) {
     res.status(502).send({ errorMessage: err.message });
